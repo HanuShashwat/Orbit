@@ -126,8 +126,8 @@ async def generate_salary_slip(request: SalarySlipRequest):
         can.drawRightString(542.5, 493, "AMOUNT (INR)")
 
         # Earnings & Deductions Bodies
-        can.rect(40, 350, 257.5, 135, stroke=1, fill=0)
-        can.rect(297.5, 350, 257.5, 135, stroke=1, fill=0)
+        can.rect(40, 395, 257.5, 90, stroke=1, fill=0)
+        can.rect(297.5, 395, 257.5, 90, stroke=1, fill=0)
         
         can.setFont("Times-Roman", 10)
         can.drawString(50, 465, "Basic Salary")
@@ -152,49 +152,49 @@ async def generate_salary_slip(request: SalarySlipRequest):
         net_pay = request.salary_amount - total_deductions
 
         # Totals Row
-        can.rect(40, 325, 257.5, 25, stroke=1, fill=0)
-        can.rect(297.5, 325, 257.5, 25, stroke=1, fill=0)
+        can.rect(40, 370, 257.5, 25, stroke=1, fill=0)
+        can.rect(297.5, 370, 257.5, 25, stroke=1, fill=0)
         
         can.setFont("Times-Bold", 10)
-        can.drawString(50, 333, "TOTAL EARNINGS (A)")
+        can.drawString(50, 378, "TOTAL EARNINGS (A)")
         can.setFont("IBMPlexMono", 10)
-        can.drawRightString(285, 333, f"{request.salary_amount:,.2f}")
+        can.drawRightString(285, 378, f"{request.salary_amount:,.2f}")
 
         can.setFont("Times-Bold", 10)
-        can.drawString(307.5, 333, "TOTAL DEDUCTIONS (B)")
+        can.drawString(307.5, 378, "TOTAL DEDUCTIONS (B)")
         can.setFont("IBMPlexMono", 10)
-        can.drawRightString(542.5, 333, f"{total_deductions:,.2f}")
+        can.drawRightString(542.5, 378, f"{total_deductions:,.2f}")
 
         # Net Pay Box
         can.setFillColor(text_color)
-        can.rect(40, 275, 150, 40, stroke=1, fill=1)
+        can.rect(40, 320, 150, 40, stroke=1, fill=1)
         can.setFillColor(HexColor("#FFFFFF"))
         can.setFont("Times-Bold", 12)
-        can.drawString(55, 290, "NET PAY (A - B)")
+        can.drawString(55, 335, "NET PAY (A - B)")
 
         can.setFillColor(text_color)
-        can.rect(190, 275, 365, 40, stroke=1, fill=0)
+        can.rect(190, 320, 365, 40, stroke=1, fill=0)
         can.setFont("Times-Bold", 14)
-        can.drawCentredString(372.5, 295, f"₹ {net_pay:,.2f}")
+        can.drawCentredString(372.5, 340, f"₹ {net_pay:,.2f}")
         
         can.setFont("IBMPlexMono", 8)
         amt_words = num2words(int(net_pay), lang='en_IN').title() + " Only"
-        can.drawCentredString(372.5, 280, f"(In Words: {amt_words})")
+        can.drawCentredString(372.5, 325, f"(In Words: {amt_words})")
 
         # YTD Summary Box
         can.setFillColor(HexColor("#E69A59"))
-        can.rect(40, 235, 515, 20, stroke=1, fill=1)
+        can.rect(40, 280, 515, 20, stroke=1, fill=1)
         can.setFillColor(text_color)
         can.setFont("Times-Bold", 10)
-        can.drawCentredString(297.5, 241, "YEAR TO DATE SUMMARY (FY: 2025-26)")
+        can.drawCentredString(297.5, 286, "YEAR TO DATE SUMMARY (FY: 2025-26)")
 
-        can.rect(40, 215, 515, 20, stroke=1, fill=0)
-        can.drawString(50, 221, "Particulars")
-        can.drawCentredString(297.5, 221, "Current Month (INR)")
-        can.drawCentredString(480, 221, "Year to Date (INR)")
+        can.rect(40, 260, 515, 20, stroke=1, fill=0)
+        can.drawString(50, 266, "Particulars")
+        can.drawCentredString(297.5, 266, "Current Month (INR)")
+        can.drawCentredString(480, 266, "Year to Date (INR)")
 
-        can.rect(40, 155, 515, 60, stroke=1, fill=0)
-        y_ytd = 200
+        can.rect(40, 200, 515, 60, stroke=1, fill=0)
+        y_ytd = 245
         for label, cm, ytd in [
             ("Total Earnings", request.salary_amount, request.salary_amount * 2),
             ("Total Deductions", total_deductions, total_deductions * 2),
@@ -209,18 +209,8 @@ async def generate_salary_slip(request: SalarySlipRequest):
 
         # Footer & Signatory
         can.setFont("Times-Roman", 7)
-        can.drawString(40, 130, "This is a computer generated salary slip and does not require a physical signature.")
+        can.drawString(40, 175, "This is a computer generated salary slip and does not require a physical signature.")
 
-        can.setFont("Times-Bold", 10)
-        can.drawCentredString(460, 130, "Authorized Signatory")
-        
-        can.setFont("Times-Italic", 18)
-        can.drawCentredString(460, 95, "Hanu Shashwat")
-        
-        can.setFont("Times-Roman", 9)
-        can.drawCentredString(460, 75, "HANU SHASHWAT")
-        can.setFont("Times-Roman", 8)
-        can.drawCentredString(460, 63, "CHIEF EXECUTIVE OFFICER")
 
         can.save()
 
