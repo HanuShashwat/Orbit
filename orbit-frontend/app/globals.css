@@ -1,17 +1,106 @@
 @import "tailwindcss";
 
-@theme {
-  --font-sans: "Times New Roman", Times, serif;
-  --font-mono: var(--font-ibm-plex-mono), "Courier New", monospace;
-}
-
+/* =========================================
+   1. CORE DESIGN TOKENS (CSS Variables)
+   ========================================= */
 :root {
-  --background: #fdfdfc;
-  --foreground: #1a1615;
+  /* FOUNDATION */
+  --bg-void: #020202;         /* Absolute background */
+  --bg-surface: #0a0a0a;      /* Cards, Sidebars, Panels */
+  --bg-surface-hover: #121212;/* Interactive lists, hover states */
+
+  /* BRAND ACCENT */
+  --brand-primary: #FC8B32;   /* The Logo Color - Action, Focus, Energy */
+  --brand-hover: #FDA35A;     /* Lighter shade for button hovers */
+  --brand-muted: rgba(252, 139, 50, 0.12); /* Subtle highlights, badges */
+
+  /* TYPOGRAPHY */
+  --text-pure: #fef3e7;       /* Headings, active icons */
+  --text-body: #E0E0E0;       /* Paragraphs, data tables */
+  --text-muted: #888888;      /* Timestamps, disabled text, hints */
+
+  /* STRUCTURE */
+  --border-hairline: rgba(255, 255, 255, 0.08);
+  --border-focus: rgba(252, 139, 50, 0.5);
 }
 
+/* =========================================
+   2. GLOBAL RESETS & TYPOGRAPHY
+   ========================================= */
+
+
+html,
 body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
+  max-width: 100vw;
+  overflow-x: hidden;
+  background-color: var(--bg-void);
+  color: var(--text-body);
+  /* Inter is highly recommended for this aesthetic */
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em;
+}
+
+/* Typography Hierarchy */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-pure);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* =========================================
+   3. BRAND IDENTITY OVERRIDES
+   ========================================= */
+
+/* The Custom Selection - Crucial for Brand Feel */
+::selection {
+  background-color: var(--brand-primary);
+  color: var(--bg-void); /* Dark text on orange looks sharper */
+}
+::-moz-selection {
+  background-color: var(--brand-primary);
+  color: var(--bg-void);
+}
+
+/* Minimalist Dark Mode Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-void);
+}
+::-webkit-scrollbar-thumb {
+  background: #333333;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-primary);
+}
+
+/* =========================================
+   4. UTILITY CLASSES (Optional but helpful)
+   ========================================= */
+.bg-grid {
+  position: fixed;
+  top: 0; 
+  left: 0; 
+  width: 100vw; 
+  height: 100vh;
+  background-image: 
+      linear-gradient(var(--border-hairline) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border-hairline) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(circle at center, black 10%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at center, black 10%, transparent 80%);
+  z-index: -1;
+  pointer-events: none;
 }
