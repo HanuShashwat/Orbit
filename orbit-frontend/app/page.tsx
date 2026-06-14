@@ -21,6 +21,12 @@ const InputField = ({ label, name, type = "text", placeholder, icon: Icon, requi
   </div>
 );
 
+const getTodayDate = () => {
+  const d = new Date();
+  d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+  return d.toISOString().split('T')[0];
+};
+
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -31,12 +37,8 @@ export default function Home() {
     salary_amount: "",
     employee_id: "",
     designation: "",
-    department: "",
-    date_of_joining: "",
     pay_period: "",
-    pay_date: "",
-    payment_mode: "Bank Transfer",
-    bank_name: "",
+    pay_date: getTodayDate(),
     bank_account_no: "",
   });
 
@@ -105,8 +107,6 @@ export default function Home() {
                 <InputField label="Phone Number" name="employee_phone" type="tel" placeholder="+91 98765 43210" icon={Phone} value={formData.employee_phone} onChange={handleChange} />
                 <InputField label="Employee ID" name="employee_id" placeholder="GAP1234" icon={Briefcase} value={formData.employee_id} onChange={handleChange} />
                 <InputField label="Designation" name="designation" placeholder="Software Engineer" icon={Briefcase} value={formData.designation} onChange={handleChange} />
-                <InputField label="Department" name="department" placeholder="Engineering" icon={Building} value={formData.department} onChange={handleChange} />
-                <InputField label="Date of Joining" name="date_of_joining" placeholder="15th January 2024" icon={Calendar} value={formData.date_of_joining} onChange={handleChange} />
               </div>
             </section>
 
@@ -118,10 +118,8 @@ export default function Home() {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" style={{ columnGap: '1.5rem', rowGap: '2rem' }}>
                 <InputField label="Slip Number" name="salary_slip_number" placeholder="GS-001" icon={FileText} value={formData.salary_slip_number} onChange={handleChange} />
-                <InputField label="Pay Period" name="pay_period" placeholder="01 Jun 2025 - 30 Jun 2025" icon={Calendar} value={formData.pay_period} onChange={handleChange} />
-                <InputField label="Pay Date" name="pay_date" placeholder="30th June 2025" icon={Calendar} value={formData.pay_date} onChange={handleChange} />
-                <InputField label="Payment Mode" name="payment_mode" placeholder="Bank Transfer" icon={CreditCard} value={formData.payment_mode} onChange={handleChange} />
-                <InputField label="Bank Name" name="bank_name" placeholder="HDFC Bank" icon={Building} value={formData.bank_name} onChange={handleChange} />
+                <InputField label="Pay Period" name="pay_period" type="month" icon={Calendar} value={formData.pay_period} onChange={handleChange} />
+                <InputField label="Pay Date" name="pay_date" type="date" icon={Calendar} value={formData.pay_date} onChange={handleChange} />
                 <InputField label="Bank Account No." name="bank_account_no" placeholder="XXXX XXXX 1234" icon={CreditCard} value={formData.bank_account_no} onChange={handleChange} />
                 <InputField label="Gross Salary Amount" name="salary_amount" type="number" placeholder="80000.00" icon={IndianRupee} colSpan={true} value={formData.salary_amount} onChange={handleChange} />
               </div>
@@ -131,7 +129,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full md:w-auto min-w-[280px] h-14 group relative overflow-hidden rounded-xl bg-[var(--brand-primary)] text-[var(--bg-void)] font-bold text-lg transition-all hover:bg-[var(--brand-hover)] active:scale-[0.99] disabled:opacity-70 disabled:pointer-events-none shadow-lg shadow-[var(--brand-primary)]/20 flex justify-center items-center gap-3 cursor-pointer"
+                className="w-full md:w-auto min-w-[280px] h-14 group relative overflow-hidden rounded-xl bg-[var(--brand-primary)] text-[#fef3e7] font-bold text-lg transition-all hover:bg-[var(--brand-hover)] active:scale-[0.99] disabled:opacity-70 disabled:pointer-events-none shadow-lg shadow-[var(--brand-primary)]/20 flex justify-center items-center gap-3 cursor-pointer"
                 style={{ padding: '0 2rem' }}
               >
                 {loading ? (
