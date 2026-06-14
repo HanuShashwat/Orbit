@@ -345,9 +345,9 @@ The generated salary slip has the following visual structure (from top to bottom
 │  ─────────── (orange underline)                         │
 │                                                         │
 │  ┌─────────────────────────────────────────────────┐    │
-│  │ Employee Name  : Arjun Mehta    Pay Period : ... │    │  ← Employee Details Box
-│  │ Employee ID    : GAP1234        Pay Date   : ... │    │    (rounded rectangle)
-│  │ Designation    : SE             Bank Acc.  : ... │    │
+│  │ Employee Name  : Arjun Mehta    Pay Period : ...│    │  ← Employee Details Box
+│  │ Employee ID    : GAP1234        Pay Date   : ...│    │    (rounded rectangle)
+│  │ Designation    : SE             Bank Acc.  : .. │    │
 │  └─────────────────────────────────────────────────┘    │
 │                                                         │
 │  ┌──────────────────┬───────────────────────┐           │
@@ -357,7 +357,7 @@ The generated salary slip has the following visual structure (from top to bottom
 │  │                  │ TDS (10%)       ₹X    │           │
 │  │                  │ EPF (12%)       ₹X    │           │
 │  ├──────────────────┼───────────────────────┤           │
-│  │ TOTAL (A)     ₹X │ TOTAL (B)       ₹X   │           │  ← Totals row
+│  │ TOTAL (A)     ₹X │ TOTAL (B)       ₹X    │           │  ← Totals row
 │  └──────────────────┴───────────────────────┘           │
 │                                                         │
 │  ┌────────────┬────────────────────────────────┐        │
@@ -367,10 +367,10 @@ The generated salary slip has the following visual structure (from top to bottom
 │                                                         │
 │  ┌─────────────────────────────────────────────────┐    │
 │  │         YEAR TO DATE SUMMARY (FY: 2025-26)      │    │  ← YTD section
-│  │  Particulars    Current Month     Year to Date   │    │    (orange header)
-│  │  Total Earnings      ₹X                ₹X        │    │
-│  │  Total Deductions    ₹X                ₹X        │    │
-│  │  Net Pay             ₹X                ₹X        │    │
+│  │  Particulars    Current Month     Year to Dat   │    │    (orange header)
+│  │  Total Earnings      ₹X                ₹X       │    │
+│  │  Total Deductions    ₹X                ₹X       │    │
+│  │  Net Pay             ₹X                ₹X       │    │
 │  └─────────────────────────────────────────────────┘    │
 │                                                         │
 │  Computer generated slip, no signature required.        │  ← Footer
@@ -449,6 +449,6 @@ SOFTWARE.
 ---
 
 <p align="center">
-  Built with ☕ by <strong>Gaprio Labs</strong>
+  Built with ☕ by <strong>Hanu Shashwat</strong>
 </p>
 ]]>
