@@ -26,6 +26,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from num2words import num2words
+
 class SalarySlipRequest(BaseModel):
     """Schema for the salary slip generation request."""
     employee_name: str
@@ -33,6 +35,15 @@ class SalarySlipRequest(BaseModel):
     employee_phone: str
     salary_slip_number: str
     salary_amount: float
+    employee_id: str
+    designation: str
+    department: str
+    date_of_joining: str
+    pay_period: str
+    pay_date: str
+    payment_mode: str
+    bank_name: str
+    bank_account_no: str
 
 @app.post("/api/generate-salary-slip")
 async def generate_salary_slip(request: SalarySlipRequest):
@@ -45,59 +56,171 @@ async def generate_salary_slip(request: SalarySlipRequest):
         # Current Date and Time
         now = datetime.now()
         current_date = now.strftime("%B %d, %Y")
-        current_time = now.strftime("%I:%M %p")
 
-        # Set fonts and colors for overlay text
+        # Set fonts
         font_path = os.path.join(os.path.dirname(__file__), 'IBMPlexMono-Regular.ttf')
         pdfmetrics.registerFont(TTFont('IBMPlexMono', font_path))
-        can.setFillColor(HexColor("#1a1615"))
+        
+        text_color = HexColor("#1a1615")
+        can.setFillColor(text_color)
 
-        can.setFont("Times-Bold", 16)
-        can.drawString(50, 700, "Salary Slip")
+        # Header Title
+        can.setFont("Times-Bold", 18)
+        can.drawCentredString(297.5, 710, "SALARY SLIP")
+        
+        # Orange Line under title
+        can.setStrokeColor(HexColor("#E69A59"))
+        can.setLineWidth(2)
+        can.line(240, 700, 355, 700)
+        
+        can.setStrokeColor(text_color)
+        can.setLineWidth(1)
 
-        can.setFont("Times-Roman", 12)
-        can.drawString(50, 660, "Slip Number: ")
-        can.setFont("IBMPlexMono", 12)
-        can.drawString(130, 660, f"{request.salary_slip_number}")
+        # Month and Year
+        can.setFont("IBMPlexMono", 10)
+        can.drawCentredString(297.5, 685, f"For the Month of {request.pay_period.split('-')[0].strip() if '-' in request.pay_period else request.pay_period}")
 
-        can.setFont("Times-Roman", 12)
-        can.drawString(50, 640, "Date: ")
-        can.setFont("IBMPlexMono", 12)
-        can.drawString(130, 640, f"{current_date}")
+        # Employee Details Box
+        can.roundRect(40, 540, 515, 120, 8, stroke=1, fill=0)
+        
+        details_left = [
+            ("Employee Name", request.employee_name),
+            ("Employee ID", request.employee_id),
+            ("Designation", request.designation),
+            ("Department", request.department),
+            ("Date of Joining", request.date_of_joining)
+        ]
+        details_right = [
+            ("Pay Period", request.pay_period),
+            ("Pay Date", request.pay_date),
+            ("Payment Mode", request.payment_mode),
+            ("Bank Name", request.bank_name),
+            ("Bank Account No.", request.bank_account_no)
+        ]
+        
+        y = 635
+        for (llabel, lval), (rlabel, rval) in zip(details_left, details_right):
+            can.setFont("Times-Bold", 10)
+            can.drawString(50, y, llabel)
+            can.drawString(150, y, ":")
+            can.setFont("IBMPlexMono", 10)
+            can.drawString(165, y, lval)
+            
+            can.setFont("Times-Bold", 10)
+            can.drawString(300, y, rlabel)
+            can.drawString(400, y, ":")
+            can.setFont("IBMPlexMono", 10)
+            can.drawString(415, y, rval)
+            y -= 20
 
-        can.setFont("Times-Roman", 12)
-        can.drawString(50, 620, "Time: ")
-        can.setFont("IBMPlexMono", 12)
-        can.drawString(130, 620, f"{current_time}")
+        # Earnings & Deductions Headers
+        can.setFillColor(HexColor("#E69A59"))
+        can.rect(40, 485, 257.5, 25, stroke=1, fill=1) # Earnings Header
+        can.rect(297.5, 485, 257.5, 25, stroke=1, fill=1) # Deductions Header
+        
+        can.setFillColor(text_color)
+        can.setFont("Times-Bold", 10)
+        can.drawString(50, 493, "EARNINGS")
+        can.drawRightString(285, 493, "AMOUNT (INR)")
+        can.drawString(307.5, 493, "DEDUCTIONS")
+        can.drawRightString(542.5, 493, "AMOUNT (INR)")
 
+        # Earnings & Deductions Bodies
+        can.rect(40, 350, 257.5, 135, stroke=1, fill=0)
+        can.rect(297.5, 350, 257.5, 135, stroke=1, fill=0)
+        
+        can.setFont("Times-Roman", 10)
+        can.drawString(50, 465, "Basic Salary")
+        can.setFont("IBMPlexMono", 10)
+        can.drawRightString(285, 465, f"{request.salary_amount:,.2f}")
+
+        deductions = [
+            ("Professional Tax", 200.00),
+            ("Income Tax (TDS)", request.salary_amount * 0.10),
+            ("Employee Provident Fund (EPF)", request.salary_amount * 0.12)
+        ]
+        
+        y_ded = 465
+        for label, amt in deductions:
+            can.setFont("Times-Roman", 10)
+            can.drawString(307.5, y_ded, label)
+            can.setFont("IBMPlexMono", 10)
+            can.drawRightString(542.5, y_ded, f"{amt:,.2f}")
+            y_ded -= 20
+
+        total_deductions = sum(amt for _, amt in deductions)
+        net_pay = request.salary_amount - total_deductions
+
+        # Totals Row
+        can.rect(40, 325, 257.5, 25, stroke=1, fill=0)
+        can.rect(297.5, 325, 257.5, 25, stroke=1, fill=0)
+        
+        can.setFont("Times-Bold", 10)
+        can.drawString(50, 333, "TOTAL EARNINGS (A)")
+        can.setFont("IBMPlexMono", 10)
+        can.drawRightString(285, 333, f"{request.salary_amount:,.2f}")
+
+        can.setFont("Times-Bold", 10)
+        can.drawString(307.5, 333, "TOTAL DEDUCTIONS (B)")
+        can.setFont("IBMPlexMono", 10)
+        can.drawRightString(542.5, 333, f"{total_deductions:,.2f}")
+
+        # Net Pay Box
+        can.setFillColor(text_color)
+        can.rect(40, 275, 150, 40, stroke=1, fill=1)
+        can.setFillColor(HexColor("#FFFFFF"))
+        can.setFont("Times-Bold", 12)
+        can.drawString(55, 290, "NET PAY (A - B)")
+
+        can.setFillColor(text_color)
+        can.rect(190, 275, 365, 40, stroke=1, fill=0)
         can.setFont("Times-Bold", 14)
-        can.drawString(50, 580, "Employee Information")
-        can.setStrokeColor(HexColor("#1a1615"))
-        can.line(50, 575, 250, 575)
+        can.drawCentredString(372.5, 295, f"₹ {net_pay:,.2f}")
+        
+        can.setFont("IBMPlexMono", 8)
+        amt_words = num2words(int(net_pay), lang='en_IN').title() + " Only"
+        can.drawCentredString(372.5, 280, f"(In Words: {amt_words})")
 
-        can.setFont("Times-Roman", 12)
-        can.drawString(50, 555, "Name: ")
-        can.setFont("IBMPlexMono", 12)
-        can.drawString(130, 555, f"{request.employee_name}")
+        # YTD Summary Box
+        can.setFillColor(HexColor("#E69A59"))
+        can.rect(40, 235, 515, 20, stroke=1, fill=1)
+        can.setFillColor(text_color)
+        can.setFont("Times-Bold", 10)
+        can.drawCentredString(297.5, 241, "YEAR TO DATE SUMMARY (FY: 2025-26)")
 
-        can.setFont("Times-Roman", 12)
-        can.drawString(50, 535, "Email: ")
-        can.setFont("IBMPlexMono", 12)
-        can.drawString(130, 535, f"{request.employee_email}")
+        can.rect(40, 215, 515, 20, stroke=1, fill=0)
+        can.drawString(50, 221, "Particulars")
+        can.drawCentredString(297.5, 221, "Current Month (INR)")
+        can.drawCentredString(480, 221, "Year to Date (INR)")
 
-        can.setFont("Times-Roman", 12)
-        can.drawString(50, 515, "Phone: ")
-        can.setFont("IBMPlexMono", 12)
-        can.drawString(130, 515, f"{request.employee_phone}")
+        can.rect(40, 155, 515, 60, stroke=1, fill=0)
+        y_ytd = 200
+        for label, cm, ytd in [
+            ("Total Earnings", request.salary_amount, request.salary_amount * 2),
+            ("Total Deductions", total_deductions, total_deductions * 2),
+            ("Net Pay", net_pay, net_pay * 2)
+        ]:
+            can.setFont("Times-Roman", 10)
+            can.drawString(50, y_ytd, label)
+            can.setFont("IBMPlexMono", 10)
+            can.drawCentredString(297.5, y_ytd, f"{cm:,.2f}")
+            can.drawCentredString(480, y_ytd, f"{ytd:,.2f}")
+            y_ytd -= 20
 
-        can.setFont("Times-Bold", 14)
-        can.drawString(50, 475, "Salary Details")
-        can.line(50, 470, 250, 470)
+        # Footer & Signatory
+        can.setFont("Times-Roman", 7)
+        can.drawString(40, 130, "This is a computer generated salary slip and does not require a physical signature.")
 
-        can.setFont("Times-Roman", 12)
-        can.drawString(50, 445, "Salary Amount: ")
-        can.setFont("IBMPlexMono", 12)
-        can.drawString(140, 445, f"₹{request.salary_amount:,.2f}")
+        can.setFont("Times-Bold", 10)
+        can.drawCentredString(460, 130, "Authorized Signatory")
+        
+        can.setFont("Times-Italic", 18)
+        can.drawCentredString(460, 95, "Hanu Shashwat")
+        
+        can.setFont("Times-Roman", 9)
+        can.drawCentredString(460, 75, "HANU SHASHWAT")
+        can.setFont("Times-Roman", 8)
+        can.drawCentredString(460, 63, "CHIEF EXECUTIVE OFFICER")
 
         can.save()
 
