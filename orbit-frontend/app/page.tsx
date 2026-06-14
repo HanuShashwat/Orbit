@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { User, Mail, Phone, FileText, IndianRupee, Loader2 } from "lucide-react";
+import { User, Mail, Phone, FileText, IndianRupee, Loader2, Briefcase, Calendar, CreditCard, Building } from "lucide-react";
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
@@ -11,6 +11,15 @@ export default function Home() {
     employee_phone: "",
     salary_slip_number: "",
     salary_amount: "",
+    employee_id: "",
+    designation: "",
+    department: "",
+    date_of_joining: "",
+    pay_period: "",
+    pay_date: "",
+    payment_mode: "Bank Transfer",
+    bank_name: "",
+    bank_account_no: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,9 +58,26 @@ export default function Home() {
     }
   };
 
+  const InputField = ({ label, name, type = "text", placeholder, icon: Icon, required = true, colSpan = false }: any) => (
+    <div className={`space-y-2 ${colSpan ? 'md:col-span-2' : ''}`}>
+      <label className="text-sm font-medium text-[#1a1615]/80 flex items-center gap-2">
+        <Icon className="w-4 h-4" /> {label}
+      </label>
+      <input
+        type={type}
+        name={name}
+        required={required}
+        value={formData[name as keyof typeof formData]}
+        onChange={handleChange}
+        placeholder={placeholder}
+        className="w-full font-mono text-sm px-4 py-3 rounded-xl bg-white/50 border border-[#1a1615]/10 focus:border-[#1a1615]/30 focus:bg-white focus:ring-4 focus:ring-[#1a1615]/5 transition-all outline-none"
+      />
+    </div>
+  );
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-6" style={{ background: "linear-gradient(135deg, #fdfdfc 0%, #f0edea 100%)" }}>
-      <div className="w-full max-w-2xl bg-white/70 backdrop-blur-xl rounded-3xl p-8 md:p-12 shadow-[0_20px_40px_-15px_rgba(26,22,21,0.1)] border border-white/50 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center p-6 py-12" style={{ background: "linear-gradient(135deg, #fdfdfc 0%, #f0edea 100%)" }}>
+      <div className="w-full max-w-4xl bg-white/70 backdrop-blur-xl rounded-3xl p-8 md:p-12 shadow-[0_20px_40px_-15px_rgba(26,22,21,0.1)] border border-white/50 relative overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#1a1615]/5 to-transparent rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-[#1a1615]/5 to-transparent rounded-full blur-2xl translate-y-1/2 -translate-x-1/2 pointer-events-none" />
@@ -66,88 +92,32 @@ export default function Home() {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Employee Name */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-[#1a1615]/80 flex items-center gap-2">
-                  <User className="w-4 h-4" /> Employee Name
-                </label>
-                <input
-                  type="text"
-                  name="employee_name"
-                  required
-                  value={formData.employee_name}
-                  onChange={handleChange}
-                  placeholder="John Doe"
-                  className="w-full font-mono text-sm px-4 py-3 rounded-xl bg-white/50 border border-[#1a1615]/10 focus:border-[#1a1615]/30 focus:bg-white focus:ring-4 focus:ring-[#1a1615]/5 transition-all outline-none"
-                />
+          <form onSubmit={handleSubmit} className="space-y-8">
+            {/* Employee Information */}
+            <div>
+              <h2 className="text-xl font-semibold mb-4 text-[#1a1615] border-b border-[#1a1615]/10 pb-2">Employee Information</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <InputField label="Employee Name" name="employee_name" placeholder="Arjun Mehta" icon={User} />
+                <InputField label="Employee Email" name="employee_email" type="email" placeholder="arjun@gaprio.in" icon={Mail} />
+                <InputField label="Phone Number" name="employee_phone" type="tel" placeholder="+91 98765 43210" icon={Phone} />
+                <InputField label="Employee ID" name="employee_id" placeholder="GAP1234" icon={Briefcase} />
+                <InputField label="Designation" name="designation" placeholder="Software Engineer" icon={Briefcase} />
+                <InputField label="Department" name="department" placeholder="Engineering" icon={Building} />
+                <InputField label="Date of Joining" name="date_of_joining" placeholder="15th January 2024" icon={Calendar} />
               </div>
+            </div>
 
-              {/* Employee Email */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-[#1a1615]/80 flex items-center gap-2">
-                  <Mail className="w-4 h-4" /> Employee Email
-                </label>
-                <input
-                  type="email"
-                  name="employee_email"
-                  required
-                  value={formData.employee_email}
-                  onChange={handleChange}
-                  placeholder="john@gaprio.com"
-                  className="w-full font-mono text-sm px-4 py-3 rounded-xl bg-white/50 border border-[#1a1615]/10 focus:border-[#1a1615]/30 focus:bg-white focus:ring-4 focus:ring-[#1a1615]/5 transition-all outline-none"
-                />
-              </div>
-
-              {/* Employee Phone */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-[#1a1615]/80 flex items-center gap-2">
-                  <Phone className="w-4 h-4" /> Phone Number
-                </label>
-                <input
-                  type="tel"
-                  name="employee_phone"
-                  required
-                  value={formData.employee_phone}
-                  onChange={handleChange}
-                  placeholder="+91 XXXXX XXXXX"
-                  className="w-full font-mono text-sm px-4 py-3 rounded-xl bg-white/50 border border-[#1a1615]/10 focus:border-[#1a1615]/30 focus:bg-white focus:ring-4 focus:ring-[#1a1615]/5 transition-all outline-none"
-                />
-              </div>
-
-              {/* Salary Slip Number */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-[#1a1615]/80 flex items-center gap-2">
-                  <FileText className="w-4 h-4" /> Slip Number
-                </label>
-                <input
-                  type="text"
-                  name="salary_slip_number"
-                  required
-                  value={formData.salary_slip_number}
-                  onChange={handleChange}
-                  placeholder="GS-001"
-                  className="w-full font-mono text-sm px-4 py-3 rounded-xl bg-white/50 border border-[#1a1615]/10 focus:border-[#1a1615]/30 focus:bg-white focus:ring-4 focus:ring-[#1a1615]/5 transition-all outline-none"
-                />
-              </div>
-
-              {/* Salary Amount */}
-              <div className="space-y-2 md:col-span-2">
-                <label className="text-sm font-medium text-[#1a1615]/80 flex items-center gap-2">
-                  <IndianRupee className="w-4 h-4" /> Salary Amount
-                </label>
-                <input
-                  type="number"
-                  name="salary_amount"
-                  required
-                  min="0"
-                  step="0.01"
-                  value={formData.salary_amount}
-                  onChange={handleChange}
-                  placeholder="50000.00"
-                  className="w-full font-mono text-lg px-4 py-3 rounded-xl bg-white/50 border border-[#1a1615]/10 focus:border-[#1a1615]/30 focus:bg-white focus:ring-4 focus:ring-[#1a1615]/5 transition-all outline-none"
-                />
+            {/* Salary Details */}
+            <div>
+              <h2 className="text-xl font-semibold mb-4 text-[#1a1615] border-b border-[#1a1615]/10 pb-2">Salary Details</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <InputField label="Slip Number" name="salary_slip_number" placeholder="GS-001" icon={FileText} />
+                <InputField label="Pay Period" name="pay_period" placeholder="01 Jun 2025 - 30 Jun 2025" icon={Calendar} />
+                <InputField label="Pay Date" name="pay_date" placeholder="30th June 2025" icon={Calendar} />
+                <InputField label="Payment Mode" name="payment_mode" placeholder="Bank Transfer" icon={CreditCard} />
+                <InputField label="Bank Name" name="bank_name" placeholder="HDFC Bank" icon={Building} />
+                <InputField label="Bank Account No." name="bank_account_no" placeholder="XXXX XXXX 1234" icon={CreditCard} />
+                <InputField label="Gross Salary Amount" name="salary_amount" type="number" placeholder="80000.00" icon={IndianRupee} colSpan={true} />
               </div>
             </div>
 
