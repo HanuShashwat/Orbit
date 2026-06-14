@@ -3,6 +3,23 @@
 import { useState } from "react";
 import { User, Mail, Phone, FileText, IndianRupee, Loader2, Briefcase, Calendar, CreditCard, Building } from "lucide-react";
 
+const InputField = ({ label, name, type = "text", placeholder, icon: Icon, required = true, colSpan = false, value, onChange }: any) => (
+  <div className={`space-y-2 ${colSpan ? 'md:col-span-2' : ''}`}>
+    <label className="text-sm font-medium text-[#1a1615]/80 flex items-center gap-2">
+      <Icon className="w-4 h-4" /> {label}
+    </label>
+    <input
+      type={type}
+      name={name}
+      required={required}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      className="w-full font-mono text-sm px-4 py-3 rounded-xl bg-white/50 border border-[#1a1615]/10 focus:border-[#1a1615]/30 focus:bg-white focus:ring-4 focus:ring-[#1a1615]/5 transition-all outline-none"
+    />
+  </div>
+);
+
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -43,13 +60,7 @@ export default function Home() {
 
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `Gaprio_Salary_Slip_${formData.salary_slip_number}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
+      window.open(url, "_blank");
     } catch (error) {
       console.error(error);
       alert("Error generating PDF");
@@ -57,23 +68,6 @@ export default function Home() {
       setLoading(false);
     }
   };
-
-  const InputField = ({ label, name, type = "text", placeholder, icon: Icon, required = true, colSpan = false }: any) => (
-    <div className={`space-y-2 ${colSpan ? 'md:col-span-2' : ''}`}>
-      <label className="text-sm font-medium text-[#1a1615]/80 flex items-center gap-2">
-        <Icon className="w-4 h-4" /> {label}
-      </label>
-      <input
-        type={type}
-        name={name}
-        required={required}
-        value={formData[name as keyof typeof formData]}
-        onChange={handleChange}
-        placeholder={placeholder}
-        className="w-full font-mono text-sm px-4 py-3 rounded-xl bg-white/50 border border-[#1a1615]/10 focus:border-[#1a1615]/30 focus:bg-white focus:ring-4 focus:ring-[#1a1615]/5 transition-all outline-none"
-      />
-    </div>
-  );
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6 py-12" style={{ background: "linear-gradient(135deg, #fdfdfc 0%, #f0edea 100%)" }}>
@@ -97,13 +91,13 @@ export default function Home() {
             <div>
               <h2 className="text-xl font-semibold mb-4 text-[#1a1615] border-b border-[#1a1615]/10 pb-2">Employee Information</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <InputField label="Employee Name" name="employee_name" placeholder="Arjun Mehta" icon={User} />
-                <InputField label="Employee Email" name="employee_email" type="email" placeholder="arjun@gaprio.in" icon={Mail} />
-                <InputField label="Phone Number" name="employee_phone" type="tel" placeholder="+91 98765 43210" icon={Phone} />
-                <InputField label="Employee ID" name="employee_id" placeholder="GAP1234" icon={Briefcase} />
-                <InputField label="Designation" name="designation" placeholder="Software Engineer" icon={Briefcase} />
-                <InputField label="Department" name="department" placeholder="Engineering" icon={Building} />
-                <InputField label="Date of Joining" name="date_of_joining" placeholder="15th January 2024" icon={Calendar} />
+                <InputField label="Employee Name" name="employee_name" placeholder="Arjun Mehta" icon={User} value={formData.employee_name} onChange={handleChange} />
+                <InputField label="Employee Email" name="employee_email" type="email" placeholder="arjun@gaprio.in" icon={Mail} value={formData.employee_email} onChange={handleChange} />
+                <InputField label="Phone Number" name="employee_phone" type="tel" placeholder="+91 98765 43210" icon={Phone} value={formData.employee_phone} onChange={handleChange} />
+                <InputField label="Employee ID" name="employee_id" placeholder="GAP1234" icon={Briefcase} value={formData.employee_id} onChange={handleChange} />
+                <InputField label="Designation" name="designation" placeholder="Software Engineer" icon={Briefcase} value={formData.designation} onChange={handleChange} />
+                <InputField label="Department" name="department" placeholder="Engineering" icon={Building} value={formData.department} onChange={handleChange} />
+                <InputField label="Date of Joining" name="date_of_joining" placeholder="15th January 2024" icon={Calendar} value={formData.date_of_joining} onChange={handleChange} />
               </div>
             </div>
 
@@ -111,13 +105,13 @@ export default function Home() {
             <div>
               <h2 className="text-xl font-semibold mb-4 text-[#1a1615] border-b border-[#1a1615]/10 pb-2">Salary Details</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <InputField label="Slip Number" name="salary_slip_number" placeholder="GS-001" icon={FileText} />
-                <InputField label="Pay Period" name="pay_period" placeholder="01 Jun 2025 - 30 Jun 2025" icon={Calendar} />
-                <InputField label="Pay Date" name="pay_date" placeholder="30th June 2025" icon={Calendar} />
-                <InputField label="Payment Mode" name="payment_mode" placeholder="Bank Transfer" icon={CreditCard} />
-                <InputField label="Bank Name" name="bank_name" placeholder="HDFC Bank" icon={Building} />
-                <InputField label="Bank Account No." name="bank_account_no" placeholder="XXXX XXXX 1234" icon={CreditCard} />
-                <InputField label="Gross Salary Amount" name="salary_amount" type="number" placeholder="80000.00" icon={IndianRupee} colSpan={true} />
+                <InputField label="Slip Number" name="salary_slip_number" placeholder="GS-001" icon={FileText} value={formData.salary_slip_number} onChange={handleChange} />
+                <InputField label="Pay Period" name="pay_period" placeholder="01 Jun 2025 - 30 Jun 2025" icon={Calendar} value={formData.pay_period} onChange={handleChange} />
+                <InputField label="Pay Date" name="pay_date" placeholder="30th June 2025" icon={Calendar} value={formData.pay_date} onChange={handleChange} />
+                <InputField label="Payment Mode" name="payment_mode" placeholder="Bank Transfer" icon={CreditCard} value={formData.payment_mode} onChange={handleChange} />
+                <InputField label="Bank Name" name="bank_name" placeholder="HDFC Bank" icon={Building} value={formData.bank_name} onChange={handleChange} />
+                <InputField label="Bank Account No." name="bank_account_no" placeholder="XXXX XXXX 1234" icon={CreditCard} value={formData.bank_account_no} onChange={handleChange} />
+                <InputField label="Gross Salary Amount" name="salary_amount" type="number" placeholder="80000.00" icon={IndianRupee} colSpan={true} value={formData.salary_amount} onChange={handleChange} />
               </div>
             </div>
 
