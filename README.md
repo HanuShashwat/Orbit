@@ -1,4 +1,4 @@
-<![CDATA[# Orbit
+# Orbit
 
 **Professional Salary Slip Generator by [Gaprio Labs](https://gaprio.in)**
 
@@ -451,4 +451,4 @@ SOFTWARE.
 <p align="center">
   Built with ☕ by <strong>Hanu Shashwat</strong>
 </p>
-]]>
+
