@@ -4,3 +4,4 @@ reportlab
 pypdf
 pydantic
 python-multipart
+num2words
