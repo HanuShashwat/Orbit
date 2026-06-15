@@ -18,9 +18,9 @@ Orbit is a **monorepo** containing two standalone applications that work togethe
 ### How the flow works (step by step)
 
 ```
-┌──────────────────────┐       POST /api/generate-salary-slip       ┌───────────────────────┐
+┌──────────────────────┐       POST /api/generate-salary-slip        ┌───────────────────────┐
 │                      │  ─────────────────────────────────────────► │                       │
-│   Next.js Frontend   │       (JSON with employee + salary data)   │   FastAPI Backend     │
+│   Next.js Frontend   │       (JSON with employee + salary data)    │   FastAPI Backend     │
 │   (localhost:3000)   │                                             │   (localhost:8000)    │
 │                      │  ◄───────────────────────────────────────── │                       │
 └──────────────────────┘       application/pdf (streamed response)   └───────────────────────┘
